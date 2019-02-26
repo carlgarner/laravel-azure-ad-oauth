@@ -4,6 +4,7 @@ namespace Metrogistics\AzureSocialite;
 
 use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class AuthController extends Controller
 {
@@ -14,7 +15,11 @@ class AuthController extends Controller
 
     public function handleOauthResponse()
     {
-        $user = Socialite::driver('azure-oauth')->user();
+        try {
+            $user = Socialite::driver('azure-oauth')->user();
+        } catch(InvalidStateException $e) {
+            $user = Socialite::driver('azure-oauth')->stateless()->user();
+        }
 
         $authUser = $this->findOrCreateUser($user);
 
