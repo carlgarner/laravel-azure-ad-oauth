@@ -39,7 +39,5 @@ return [
     'user_map' => [
         'name' => 'name',
         'email' => 'email',
-        'name' => 'name',
-        'name' => 'name',
     ]
 ];
