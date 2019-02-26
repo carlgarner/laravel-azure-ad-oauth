@@ -1,6 +1,6 @@
 {
-    "name": "metrogistics/laravel-azure-ad-oauth",
-    "description": "Provides single-sign-on ability to Microsoft Azure Active Directory enabled apps.",
+    "name": "carlgarner/laravel-azure-ad-oauth",
+    "description": "Provides single-sign-on ability to Microsoft Azure Active Directory enabled apps and extracts user group detail from Graph API",
     "require": {
         "laravel/framework": ">5.4",
         "laravel/socialite": ">3.0",
@@ -10,6 +10,10 @@
         {
             "name": "Patrick Stephan",
             "email": "patrick.stephan@metrogistics.com"
+        },
+        {
+            "name": "Carl Garner",
+            "email": "carl.garner@piksel.com"
         }
     ],
     "autoload": {
