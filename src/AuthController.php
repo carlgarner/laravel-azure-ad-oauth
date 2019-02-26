@@ -2,6 +2,7 @@
 
 namespace Metrogistics\AzureSocialite;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -13,8 +14,17 @@ class AuthController extends Controller
         return Socialite::driver('azure-oauth')->redirect();
     }
 
-    public function handleOauthResponse()
+    public function handleOauthResponse(Request $request)
     {
+        if (!$request->input('code')) {
+            $redirect = redirect(config('azure-oauth.redirect_on_error'));
+            $error = 'Login failed: ' .
+                $request->input('error') .
+                ' - ' .
+                $request->input('error_description');
+            return $redirect->withErrors($error);
+        }
+
         try {
             $user = Socialite::driver('azure-oauth')->user();
         } catch(InvalidStateException $e) {

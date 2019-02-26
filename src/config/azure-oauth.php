@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'azure_tenant_id' => env('AZURE_TENANT_ID', 'common'),
+
     'routes' => [
         // The middleware to wrap the auth routes in.
         // Must contain session handling otherwise login will fail.
@@ -14,6 +16,7 @@ return [
         // There should be no reason to override this.
         'callback' => 'login/microsoft/callback',
     ],
+
     'credentials' => [
         'client_id' => env('AZURE_AD_CLIENT_ID', ''),
         'client_secret' => env('AZURE_AD_CLIENT_SECRET', ''),
@@ -22,6 +25,9 @@ return [
 
     // The route to redirect the user to upon login.
     'redirect_on_login' => '/home',
+
+    // The route to redirect the user to on error
+    'redirect_on_error' => '/',
 
     // The User Eloquent class.
     'user_class' => '\\App\\User',
