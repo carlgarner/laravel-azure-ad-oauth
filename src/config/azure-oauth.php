@@ -39,6 +39,9 @@ return [
     // The users table database column to store the user SSO ID.
     'user_id_field' => 'username',
 
+    // The field from Azure which should be taken to identify the user
+    'user_azure_field' => 'id',
+
     // How to map azure user fields to Laravel user fields.
     // Do not include the id field above.
     // AzureUserField => LaravelUserField
