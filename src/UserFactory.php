@@ -12,28 +12,31 @@ class UserFactory
         $this->config = config('azure-oauth');
     }
 
-    public function convertAzureUser($azure_user)
+    public function convertAzureUser($azure_user, $user)
     {
         $user_class = config('azure-oauth.user_class');
         $user_map = config('azure-oauth.user_map');
         $id_field = config('azure-oauth.user_id_field');
 
-        $new_user = new $user_class;
-        $new_user->$id_field = $azure_user->id;
+        if(!$user) {
+            $user = new $user_class;
+        }
+
+        $user->$id_field = $azure_user->id;
 
         foreach($user_map as $azure_field => $user_field){
-            $new_user->$user_field = $azure_user->$azure_field;
+            $user->$user_field = $azure_user->$azure_field;
         }
 
         $callback = static::$user_callback;
 
         if($callback && is_callable($callback)){
-            $callback($new_user, $azure_user);
+            $callback($user, $azure_user);
         }
 
-        $new_user->save();
+        $user->save();
 
-        return $new_user;
+        return $user;
     }
 
     public static function userCallback($callback)

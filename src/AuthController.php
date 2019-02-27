@@ -26,14 +26,14 @@ class AuthController extends Controller
         }
 
         try {
-            $user = Socialite::driver('azure-oauth')->user();
+            $azure_user = Socialite::driver('azure-oauth')->user();
         } catch(InvalidStateException $e) {
-            $user = Socialite::driver('azure-oauth')->stateless()->user();
+            $azure_user = Socialite::driver('azure-oauth')->stateless()->user();
         }
 
-        $authUser = $this->findOrCreateUser($user);
+        $user = $this->findOrCreateUser($azure_user);
 
-        auth()->login($authUser, true);
+        auth()->login($user, true);
 
         // session([
         //     'azure_user' => $user
@@ -44,18 +44,13 @@ class AuthController extends Controller
         );
     }
 
-    protected function findOrCreateUser($user)
+    protected function findOrCreateUser($azure_user)
     {
 	    $user_class = config('azure-oauth.user_class');
 	    $user_field = config('azure-oauth.user_azure_field');
-        $authUser = $user_class::where(config('azure-oauth.user_id_field'), $user->$user_field)->first();
 
-        if ($authUser) {
-            return $authUser;
-        }
+        $user = $user_class::where(config('azure-oauth.user_id_field'), $azure_user->$user_field)->first();
 
-        $UserFactory = new UserFactory();
-
-        return $UserFactory->convertAzureUser($user);
+        return (new UserFactory())->convertAzureUser($azure_user, $user);
     }
 }
