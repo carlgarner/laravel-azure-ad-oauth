@@ -2,7 +2,16 @@
 
 ## Installation
 
-`composer require metrogistics/laravel-azure-ad-oauth`
+This version of the package is not available without specifying a repository in your `composer.json` file. In this case, you should add 
+```
+"repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/carlgarner/laravel-azure-ad-oauth.git"
+    }
+],
+```
+and then run `composer update` which will obtain this package and its dependencies.
 
 If you are using Laravel 5.5 or greater, the service provider will be detected and installed by Laravel automatically. Otherwise you will need to add the service provider and the facade (optional) to the `config/app.php` file:
 
@@ -28,7 +37,7 @@ AZURE_AD_CLIENT_SECRET=XXXX
 The only changes you should have to make to your application are:
 
 * You will need to make the password field in the users table nullable.
-* You will need to have a `VARCHAR` field on the users table that is 36 characters long to store the Azure AD ID for the user. The default name for the field is `azure_id` but that can be changed in the config file: `'user_id_field' => 'azure_id',`.
+* By default, the Azure AD ID for the user is stored in the `username` field in the Users table. This can be changed in the config file: `'user_id_field' => 'username',` but you will need to have a `VARCHAR` field on the users table that is 36 characters long.
 
 ## Usage
 
@@ -37,16 +46,19 @@ All you need to do to make use of Azure AD SSO is to point a user to the `/login
 After login, you can access the basic Laravel authenticate user as normal:
 
 ```
-auth()->user();
+Auth::user();
 ```
 
 If you need to set additional user fields when the user model is created at login, you may provide a callback via the `UserFactory::userCallback()` method. A good place to do so would be in your AppServiceProvider's `boot` method:
 
 ```
-\Metrogistics\AzureSocialite\UserFactory::userCallback(function($new_user){
+\Metrogistics\AzureSocialite\UserFactory::userCallback(function($new_user, $azure_user){
 	$new_user->api_token = str_random(60);
 });
 ```
+
+The `$azure_user` object carries tokens obtained during the OAuth process which can be used to make subsequent Graph API calls if required. The token is available via `$azure_user->token`.
+
 
 ## Azure AD Setup
 
