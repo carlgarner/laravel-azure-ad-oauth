@@ -28,7 +28,7 @@ class UserFactory
         $callback = static::$user_callback;
 
         if($callback && is_callable($callback)){
-            $callback($new_user);
+            $callback($new_user, $azure_user);
         }
 
         $new_user->save();

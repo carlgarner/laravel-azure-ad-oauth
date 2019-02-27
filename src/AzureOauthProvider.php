@@ -36,7 +36,7 @@ class AzureOauthProvider extends AbstractProvider implements ProviderInterface
     {
         $response = $this->getHttpClient()->get('https://graph.microsoft.com/v1.0/me/', [
             'headers' => [
-                'Authorization' => 'Bearer '.$token,
+                'Authorization' => 'Bearer ' . $token,
             ],
         ]);
 
@@ -55,6 +55,7 @@ class AzureOauthProvider extends AbstractProvider implements ProviderInterface
             $token = Arr::get($response, 'access_token')
         ));
 
+        $user->token = Arr::get($response, 'access_token');
         $user->idToken = Arr::get($response, 'id_token');
         $user->expiresAt = time() + Arr::get($response, 'expires_in');
 
