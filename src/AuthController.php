@@ -46,8 +46,8 @@ class AuthController extends Controller
 
     protected function findOrCreateUser($user)
     {
-	$user_class = config('azure-oauth.user_class');
-	$user_field = config('azure-oauth.user_azure_field');
+	    $user_class = config('azure-oauth.user_class');
+	    $user_field = config('azure-oauth.user_azure_field');
         $authUser = $user_class::where(config('azure-oauth.user_id_field'), $user->$user_field)->first();
 
         if ($authUser) {
