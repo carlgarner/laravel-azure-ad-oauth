@@ -26,23 +26,23 @@ class ServiceProvider extends BaseServiceProvider
         // });
 
         $this->publishes([
-            __DIR__ . '/config/azure-oauth.php' => config_path('azure-oauth.php'),
+            __DIR__ . '/config/oauth-azure.php' => config_path('oauth-azure.php'),
         ]);
 
         $this->mergeConfigFrom(
-            __DIR__ . '/config/azure-oauth.php', 'azure-oauth'
+            __DIR__ . '/config/oauth-azure.php', 'oauth-azure'
         );
 
-        $this->app['Laravel\Socialite\Contracts\Factory']->extend('azure-oauth', function($app){
+        $this->app['Laravel\Socialite\Contracts\Factory']->extend('oauth-azure', function($app){
             return $app['Laravel\Socialite\Contracts\Factory']->buildProvider(
                 'Metrogistics\AzureSocialite\AzureOauthProvider',
-                config('azure-oauth.credentials')
+                config('oauth-azure.credentials')
             );
         });
 
-        $this->app['router']->group(['middleware' => config('azure-oauth.routes.middleware')], function($router){
-            $router->get(config('azure-oauth.routes.login'), 'Metrogistics\AzureSocialite\AuthController@redirectToOauthProvider')->name('oauth.login');
-            $router->get(config('azure-oauth.routes.callback'), 'Metrogistics\AzureSocialite\AuthController@handleOauthResponse')->name('oauth.redirect');
+        $this->app['router']->group(['middleware' => config('oauth-azure.routes.middleware')], function($router){
+            $router->get(config('oauth-azure.routes.login'), 'Metrogistics\AzureSocialite\AuthController@redirectToOauthProvider')->name('oauth.login');
+            $router->get(config('oauth-azure.routes.callback'), 'Metrogistics\AzureSocialite\AuthController@handleOauthResponse')->name('oauth.redirect');
         });
     }
 }

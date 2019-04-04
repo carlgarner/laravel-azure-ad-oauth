@@ -11,13 +11,13 @@ class AuthController extends Controller
 {
     public function redirectToOauthProvider()
     {
-        return Socialite::driver('azure-oauth')->redirect();
+        return Socialite::driver('oauth-azure')->redirect();
     }
 
     public function handleOauthResponse(Request $request)
     {
         if (!$request->input('code')) {
-            $redirect = redirect(config('azure-oauth.redirect_on_error'));
+            $redirect = redirect(config('oauth-azure.redirect_on_error'));
             $error = 'Login failed: ' .
                 $request->input('error') .
                 ' - ' .
@@ -26,9 +26,9 @@ class AuthController extends Controller
         }
 
         try {
-            $azure_user = Socialite::driver('azure-oauth')->user();
+            $azure_user = Socialite::driver('oauth-azure')->user();
         } catch(InvalidStateException $e) {
-            $azure_user = Socialite::driver('azure-oauth')->stateless()->user();
+            $azure_user = Socialite::driver('oauth-azure')->stateless()->user();
         }
 
         $user = $this->findOrCreateUser($azure_user);
@@ -40,16 +40,16 @@ class AuthController extends Controller
         // ]);
 
         return redirect(
-            config('azure-oauth.redirect_on_login')
+            config('oauth-azure.redirect_on_login')
         );
     }
 
     protected function findOrCreateUser($azure_user)
     {
-	    $user_class = config('azure-oauth.user_class');
-	    $user_field = config('azure-oauth.user_azure_field');
+	    $user_class = config('oauth-azure.user_class');
+	    $user_field = config('oauth-azure.user_azure_field');
 
-        $user = $user_class::where(config('azure-oauth.user_id_field'), $azure_user->$user_field)->first();
+        $user = $user_class::where(config('oauth-azure.user_id_field'), $azure_user->$user_field)->first();
 
         return (new UserFactory())->convertAzureUser($azure_user, $user);
     }

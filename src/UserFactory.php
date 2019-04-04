@@ -9,14 +9,14 @@ class UserFactory
 
     public function __construct()
     {
-        $this->config = config('azure-oauth');
+        $this->config = config('oauth-azure');
     }
 
     public function convertAzureUser($azure_user, $user)
     {
-        $user_class = config('azure-oauth.user_class');
-        $user_map = config('azure-oauth.user_map');
-        $id_field = config('azure-oauth.user_id_field');
+        $user_class = config('oauth-azure.user_class');
+        $user_map = config('oauth-azure.user_map');
+        $id_field = config('oauth-azure.user_id_field');
 
         if(!$user) {
             $user = new $user_class;
